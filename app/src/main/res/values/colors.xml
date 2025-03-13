@@ -15,6 +15,7 @@
     <!-- Text Colors -->
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
+    <color name="accent">#2962FF</color>
     <color name="hint_text">#9E9E9E</color>
     <color name="disabled_text">#BDBDBD</color>
 

@@ -24,10 +24,12 @@ class MainActivity : AppCompatActivity() {
         bottomBar = findViewById(R.id.BNV)
 
         setupBottomBarNavigation()
+
+        // Sync bottom bar with NavController
+        bottomBar.selectTabById(R.id.homeFragment, true)
     }
 
     private fun setupBottomBarNavigation() {
-        // Set up a listener for tab selection
         bottomBar.setOnTabSelectListener(object : AnimatedBottomBar.OnTabSelectListener {
             override fun onTabSelected(
                 lastIndex: Int,
@@ -35,13 +37,9 @@ class MainActivity : AppCompatActivity() {
                 newIndex: Int,
                 newTab: AnimatedBottomBar.Tab
             ) {
-                // Navigate to the corresponding fragment based on the selected tab ID
                 if (lastTab != null && lastTab.id == newTab.id) {
-                    // Reselection of the current tab
-                    // Pop the back stack to the start destination
                     navController.popBackStack(navController.graph.startDestinationId, false)
                 } else {
-                    // New tab selection
                     when (newTab.id) {
                         R.id.homeFragment -> navController.navigate(R.id.homeFragment)
                         R.id.bookingFragment2 -> navController.navigate(R.id.bookingFragment2)
