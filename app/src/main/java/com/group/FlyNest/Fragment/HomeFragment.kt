@@ -220,7 +220,6 @@ class HomeFragment : Fragment() {
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
 
                 // Dummy data fallback only in debug mode
-                val isDebugMode = true // Replace with BuildConfig.DEBUG in production
                 if (isDebugMode) {
                     println("Falling back to dummy data due to ResponseException")
                     val dummyOffers = arrayOf(

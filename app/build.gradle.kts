@@ -62,6 +62,16 @@ dependencies {
     // Google Play services for Google Sign-In
     implementation(libs.google.play.services.auth)
 
+    // For CircleImageView
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
+// For Glide (to load images)
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
+// For handling runtime permissions (if needed)
+    implementation ("com.karumi:dexter:6.2.3")
+
     // Coroutines and Lifecycle for async operations
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -5,6 +5,15 @@
     <!-- Add Internet permission -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Add these permissions outside the <application> tag -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -36,6 +45,10 @@
             android:name=".SignUpActivity"
             android:exported="false" />
 
+        <!-- PhoneNumber -->
+        <activity
+            android:name=".phoneNumber"
+            android:exported="false" />
 
         <!-- ForgotPassword -->
         <activity
