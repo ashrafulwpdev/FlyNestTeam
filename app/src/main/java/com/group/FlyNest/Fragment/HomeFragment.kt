@@ -126,7 +126,6 @@ class HomeFragment : Fragment() {
                     .and("nonStop", "false")
                     .and("max", "10")
 
-                // Perform network call on IO dispatcher
                 val flightOffers = withContext(Dispatchers.IO) {
                     amadeus.shopping.flightOffersSearch.get(params)
                 }
@@ -138,35 +137,11 @@ class HomeFragment : Fragment() {
                         "Found $flightCount flights",
                         Toast.LENGTH_SHORT
                     ).show()
-
-                    flightOffers.forEach { flightOffer ->
-                        val itineraries = flightOffer.itineraries
-                        val firstItinerary = itineraries[0]
-                        val segments = firstItinerary.segments
-
-                        segments.forEach { segment ->
-                            val departure = segment.departure
-                            val arrival = segment.arrival
-                            val flightInfo = "Flight from ${departure.iataCode} " +
-                                    "to ${arrival.iataCode} " +
-                                    "on ${departure.at} " +
-                                    "to ${arrival.at}"
-                            println(flightInfo)
-                        }
-                    }
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "No flights found",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), "No flights found", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: ResponseException) {
-                Toast.makeText(
-                    requireContext(),
-                    "Error: ${e.description}",
-                    Toast.LENGTH_LONG
-                ).show()
+                Toast.makeText(requireContext(), "Error: ${e.description}", Toast.LENGTH_LONG).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
             }
@@ -176,9 +151,5 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance() = HomeFragment()
     }
 }
