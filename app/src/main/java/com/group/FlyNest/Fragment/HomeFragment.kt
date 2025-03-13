@@ -1,97 +1,184 @@
 package com.group.FlyNest.Fragment
 
-import android.content.Intent
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.group.FlyNest.LoginActivity
+import androidx.lifecycle.lifecycleScope
+import com.amadeus.Amadeus
+import com.amadeus.Params
+import com.amadeus.exceptions.ResponseException
+import com.amadeus.resources.FlightOfferSearch
 import com.group.FlyNest.databinding.FragmentHomeBinding
-import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class HomeFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var auth: FirebaseAuth
+    private lateinit var amadeus: Amadeus
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+        amadeus = Amadeus.builder("BXTxSAL4THOZAnRZh6g0FkmjTu7CwKAw", "OuGa0Aurv9ZyeTdt")
+            .setHost("test.api.amadeus.com")
+            .build()
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment using view binding
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupDatePicker()
+        setupSearchButton()
+    }
 
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
+    private fun setupDatePicker() {
+        val calendar = Calendar.getInstance()
 
-        // Set up logout button click listener
-        binding.logoutButton.setOnClickListener {
-            // Sign out the user
-            auth.signOut()
+        binding.dateInput.setOnClickListener {
+            DatePickerDialog(
+                requireContext(),
+                { _, year, month, day ->
+                    calendar.set(year, month, day)
+                    binding.dateInput.setText(dateFormat.format(calendar.time))
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+            ).apply {
+                datePicker.minDate = System.currentTimeMillis() - 1000
+            }.show()
+        }
+    }
 
-            // Show a toast message
-            Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+    private fun setupSearchButton() {
+        binding.searchButton.setOnClickListener {
+            val origin = binding.originInput.text.toString().trim().uppercase()
+            val destination = binding.destinationInput.text.toString().trim().uppercase()
+            val date = binding.dateInput.text.toString()
 
-            // Navigate back to LoginActivity
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-            requireActivity().finish() // Close the current activity
+            if (validateInputs(origin, destination, date)) {
+                searchFlights(origin, destination, date)
+            }
+        }
+    }
+
+    private fun validateInputs(origin: String, destination: String, date: String): Boolean {
+        binding.originLayout.error = null
+        binding.destinationLayout.error = null
+        binding.dateLayout.error = null
+
+        when {
+            origin.isEmpty() -> {
+                binding.originLayout.error = "Please enter origin airport code"
+                return false
+            }
+            destination.isEmpty() -> {
+                binding.destinationLayout.error = "Please enter destination airport code"
+                return false
+            }
+            date.isEmpty() -> {
+                binding.dateLayout.error = "Please select a date"
+                return false
+            }
+            origin == destination -> {
+                binding.originLayout.error = "Origin and destination cannot be the same"
+                return false
+            }
+            !origin.matches(Regex("^[A-Z]{3}$")) -> {
+                binding.originLayout.error = "Invalid IATA code (3 letters)"
+                return false
+            }
+            !destination.matches(Regex("^[A-Z]{3}$")) -> {
+                binding.destinationLayout.error = "Invalid IATA code (3 letters)"
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun searchFlights(origin: String, destination: String, date: String) {
+        binding.progressBar.visibility = View.VISIBLE
+
+        lifecycleScope.launch {
+            try {
+                val params = Params.with("originLocationCode", origin)
+                    .and("destinationLocationCode", destination)
+                    .and("departureDate", date)
+                    .and("adults", "1")
+                    .and("nonStop", "false")
+                    .and("max", "10")
+
+                // Perform network call on IO dispatcher
+                val flightOffers = withContext(Dispatchers.IO) {
+                    amadeus.shopping.flightOffersSearch.get(params)
+                }
+
+                if (flightOffers.isNotEmpty()) {
+                    val flightCount = flightOffers.size
+                    Toast.makeText(
+                        requireContext(),
+                        "Found $flightCount flights",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    flightOffers.forEach { flightOffer ->
+                        val itineraries = flightOffer.itineraries
+                        val firstItinerary = itineraries[0]
+                        val segments = firstItinerary.segments
+
+                        segments.forEach { segment ->
+                            val departure = segment.departure
+                            val arrival = segment.arrival
+                            val flightInfo = "Flight from ${departure.iataCode} " +
+                                    "to ${arrival.iataCode} " +
+                                    "on ${departure.at} " +
+                                    "to ${arrival.at}"
+                            println(flightInfo)
+                        }
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "No flights found",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } catch (e: ResponseException) {
+                Toast.makeText(
+                    requireContext(),
+                    "Error: ${e.description}",
+                    Toast.LENGTH_LONG
+                ).show()
+            } finally {
+                binding.progressBar.visibility = View.GONE
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null // Avoid memory leaks
+        _binding = null
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HomeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HomeFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = HomeFragment()
     }
 }
