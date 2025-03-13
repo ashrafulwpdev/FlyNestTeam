@@ -32,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
 }
 
@@ -50,22 +50,31 @@ dependencies {
     implementation(libs.androidx.navigation.fragment)
 
     // Firebase (use BoM to manage versions)
-    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
-    implementation("com.google.firebase:firebase-auth")
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
 
     // Credential Manager for Google Sign-In
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
-    implementation ("com.google.firebase:firebase-firestore-ktx")
 
     // Google Play services for Google Sign-In
-    implementation("com.google.android.gms:play-services-auth:21.3.0")
+    implementation(libs.google.play.services.auth)
+
+    // Coroutines and Lifecycle for async operations
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
 
     // Third-party libraries
-    implementation("com.hbb20:ccp:2.7.3")
-    implementation("nl.joery.animatedbottombar:library:1.1.0")
-    implementation ("androidx.appcompat:appcompat:1.3.1")
+    implementation(libs.ccp) // Country Code Picker
+    implementation(libs.animatedbottombar)
+
+    // Amadeus API
+    implementation(libs.amadeus.java)
+
+    // Gson for JSON parsing
+    implementation(libs.gson)
 
     // Testing libraries
     testImplementation(libs.junit)
