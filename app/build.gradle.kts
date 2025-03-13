@@ -68,7 +68,7 @@ dependencies {
 
     // Third-party libraries
     implementation(libs.ccp) // Country Code Picker
-    implementation(libs.animatedbottombar)
+    implementation(libs.animatedbottombar) // AnimatedBottomBar via version catalog
 
     // Amadeus API
     implementation(libs.amadeus.java)
@@ -80,4 +80,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // RecyclerView
+    implementation(libs.androidx.recyclerview)
 }
