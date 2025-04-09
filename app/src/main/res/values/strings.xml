@@ -7,4 +7,18 @@
         <item quantity="other">%d Passengers</item>
     </plurals>
     <string name="passenger_class_format">%1$s • %2$s</string>
+    <string name="flight_results_title">Flight Results</string>
+    <string name="sort_by_price">Price</string>
+    <string name="sort_by_duration">Duration</string>
+    <string name="no_flights_available">No flights available illustration</string>
+    <string name="no_flights_found">No flights found</string>
+    <string name="try_different_search">Try different search criteria</string>
+
+    <!-- Common -->
+    <string name="currency_format">RM%1$d</string>
+    <string name="flight_duration_format">%1$sh %2$sm</string>
+    <string name="non_stop">Non-stop</string>
+    <string name="one_stop">1 stop</string>
+    <string name="multiple_stops">%1$d stops</string>
+
 </resources>

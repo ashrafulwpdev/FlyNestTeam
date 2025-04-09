@@ -13,5 +13,8 @@ data class Flight(
     val duration: String,
     val price: Int,
     val stops: Int,
-    @DrawableRes val airlineLogo: Int
+    @DrawableRes val airlineLogo: Int,
+    val departureAirport: String,
+    val arrivalAirport: String,
+    val flightDate: String
 ) : Parcelable

@@ -56,5 +56,26 @@
     <color name="chip_stroke">#EC441E</color>
     <color name="chip_text_selected">#FFFFFF</color>
     <color name="chip_text_unselected">#EC441E</color>
+    <!-- Your brand orange -->
+    <color name="primary_dark">#C23819</color>
+    <color name="primary_light">#FF7A4D</color>
+    <!-- Backgrounds -->
+    <color name="surface">#FFFFFF</color>
+    <!-- Text Colors -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_on_primary">#FFFFFF</color>
+    <!-- Borders/Dividers -->
+    <color name="divider">#E0E0E0</color>
+    <color name="border">#BDBDBD</color>
+    <!-- States -->
+    <color name="white_alpha_50">#80FFFFFF</color>
+    <color name="black_alpha_10">#1A000000</color>
+    <!-- Special Colors -->
+      <!-- For highlighting best prices -->
+    <color name="gray_light">#EEEEEE</color>
+    <!-- Chip Colors -->
+    <color name="chip_background">#E0E0E0</color>
+    <color name="chip_selected">#EC441E</color>
 
 </resources>

@@ -1,6 +1,5 @@
 package com.group.FlyNest.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -8,20 +7,18 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.group.FlyNest.databinding.ItemFlightBinding
 import com.group.FlyNest.model.Flight
+import java.text.SimpleDateFormat
+import java.util.*
 
 class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(FlightDiffCallback()) {
 
-    private var itemClickListener: ((Flight) -> Unit)? = null
-
-    fun setOnItemClickListener(listener: (Flight) -> Unit) {
-        itemClickListener = listener
-    }
+    var onItemClickListener: ((Flight) -> Unit)? = null
 
     inner class FlightViewHolder(private val binding: ItemFlightBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(flight: Flight) {
-            binding.apply {
+            with(binding) {
                 airlineName.text = flight.airline
                 flightNumber.text = flight.flightNumber
                 departureTime.text = flight.departureTime
@@ -33,10 +30,24 @@ class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(Flight
                     1 -> "1 stop"
                     else -> "${flight.stops} stops"
                 }
+                departureAirport.text = flight.departureAirport
+                arrivalAirport.text = flight.arrivalAirport
+                flightDate.text = formatDate(flight.flightDate)
                 airlineLogo.setImageResource(flight.airlineLogo)
 
-                root.setOnClickListener { itemClickListener?.invoke(flight) }
-                bookButton.setOnClickListener { itemClickListener?.invoke(flight) }
+                root.setOnClickListener { onItemClickListener?.invoke(flight) }
+                bookButton.setOnClickListener { onItemClickListener?.invoke(flight) }
+            }
+        }
+
+        private fun formatDate(dateString: String): String {
+            return try {
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
+                val date = inputFormat.parse(dateString)
+                outputFormat.format(date ?: return dateString)
+            } catch (e: Exception) {
+                dateString
             }
         }
     }
