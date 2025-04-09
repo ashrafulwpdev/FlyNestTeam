@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
+    id("kotlin-parcelize")
+
 }
 
 android {
@@ -85,6 +87,13 @@ dependencies {
 
     // Gson for JSON parsing
     implementation(libs.gson)
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
+    implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
+    implementation ("androidx.navigation:navigation-fragment-ktx:2.5.3")
+    implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
+    implementation ("com.google.android.material:material:1.11.0")
+    implementation ("androidx.fragment:fragment-ktx:1.6.2")
 
     // Testing libraries
     testImplementation(libs.junit)

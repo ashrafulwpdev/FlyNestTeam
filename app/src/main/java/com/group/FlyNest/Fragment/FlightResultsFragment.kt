@@ -1,21 +1,21 @@
-package com.group.FlyNest.Fragment
+package com.group.FlyNest.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.amadeus.resources.FlightOfferSearch
-import com.group.FlyNest.FlightResultsAdapter
+import com.group.FlyNest.R
+import com.group.FlyNest.adapter.FlightAdapter
 import com.group.FlyNest.databinding.FragmentFlightResultsBinding
+import com.group.FlyNest.model.Flight
 
 class FlightResultsFragment : Fragment() {
 
     private var _binding: FragmentFlightResultsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var flightAdapter: FlightAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,36 +28,60 @@ class FlightResultsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupRecyclerView()
+        loadFlights()
+    }
 
-        val flightOffers = arguments?.getSerializable("flights") as? Array<FlightOfferSearch>
-        val dummyOffers = arguments?.getSerializable("dummy_flights") as? Array<DummyFlightOffer>
+    private fun setupRecyclerView() {
+        flightAdapter = FlightAdapter()
+        binding.flightsRecyclerView.apply {  // Changed from recyclerView to flightsRecyclerView
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = flightAdapter
+        }
 
-        if (flightOffers != null && flightOffers.isNotEmpty()) {
-            println("Received ${flightOffers.size} real flight offers")
-            setupRecyclerView(flightOffers.toList())
-        } else if (dummyOffers != null && dummyOffers.isNotEmpty()) {
-            println("Received ${dummyOffers.size} dummy flight offers")
-            setupRecyclerView(dummyOffers.toList())
+        flightAdapter.setOnItemClickListener { flight ->
+            FlightDetailsDialog.newInstance(flight).show(
+                parentFragmentManager,
+                "FlightDetailsDialog"
+            )
+        }
+    }
+
+    private fun loadFlights() {
+        binding.progressBar.visibility = View.VISIBLE
+
+        // Sample data - replace with your actual data loading
+        val flights = listOf(
+            Flight(
+                airline = "Malaysia Airlines",
+                flightNumber = "MH123",
+                departureTime = "08:00",
+                arrivalTime = "10:30",
+                duration = "2h 30m",
+                price = 299,
+                stops = 0,
+                airlineLogo = R.drawable.logo_malaysia_airlines
+            ),
+            Flight(
+                airline = "AirAsia",
+                flightNumber = "AK456",
+                departureTime = "11:45",
+                arrivalTime = "14:15",
+                duration = "2h 30m",
+                price = 189,
+                stops = 0,
+                airlineLogo = R.drawable.logo_airasia
+            )
+        )
+
+        if (flights.isEmpty()) {
+            binding.emptyState.visibility = View.VISIBLE
         } else {
-            println("No flight offers received in FlightResultsFragment")
-            Toast.makeText(context, "No flight data available", Toast.LENGTH_SHORT).show()
-            return
+            binding.emptyState.visibility = View.GONE
+            flightAdapter.submitList(flights)
         }
 
-        setupBackButton()
-    }
-
-    private fun setupRecyclerView(offers: List<Any>) {
-        binding.flightsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = FlightResultsAdapter(offers) // Adapter must handle both types
-        }
-    }
-
-    private fun setupBackButton() {
-        binding.backButton.setOnClickListener {
-            findNavController().popBackStack()
-        }
+        binding.progressBar.visibility = View.GONE
     }
 
     override fun onDestroyView() {

@@ -43,4 +43,18 @@
     <color name="yellow">#FBC02D</color>
     <color name="purple">#7B1FA2</color>
     <color name="light_purple">#E1BEE7</color>
+    <color name="colorPrimary">#EC441E</color>
+    <color name="primary">#EC441E</color>
+    <color name="best_deal">#4CAF50</color>
+    <color name="primaryText">#212121</color>
+    <color name="secondaryText">#757575</color>
+    <color name="background">#FAFAFA</color>
+
+    <!-- New colors for chips -->
+    <color name="chip_selected_background">#EC441E</color>
+    <color name="chip_unselected_background">#FFFFFF</color>
+    <color name="chip_stroke">#EC441E</color>
+    <color name="chip_text_selected">#FFFFFF</color>
+    <color name="chip_text_unselected">#EC441E</color>
+
 </resources>

@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
     app:startDestination="@id/homeFragment">
 
-    <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.group.FlyNest.Fragment.HomeFragment"
-        android:label="Home">
-        <action
-            android:id="@+id/action_home_to_flight_results"
-            app:destination="@id/flightResultsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/flightResultsFragment"
-        android:name="com.group.FlyNest.Fragment.FlightResultsFragment"
-        android:label="Flight Results" />
-
+    <!-- Your other fragments remain the same -->
     <fragment
         android:id="@+id/bookingFragment2"
         android:name="com.group.FlyNest.Fragment.BookingFragment"
-    android:label="Booking" />
+        android:label="Booking" />
 
     <fragment
         android:id="@+id/offerFragment"
         android:name="com.group.FlyNest.Fragment.OfferFragment"
-    android:label="Offers" />
+        android:label="Offers" />
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.group.FlyNest.Fragment.ProfileFragment"
-    android:label="Profile" />
+        android:label="Profile" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.group.FlyNest.Fragment.HomeFragment"
+        android:label="Home">
+
+        <action
+            android:id="@+id/action_home_to_flight_results"
+            app:destination="@id/flightResultsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/flightResultsFragment"
+        android:name="com.group.FlyNest.fragment.FlightResultsFragment"
+        android:label="Flight Results"
+        tools:layout="@layout/fragment_flight_results">
+
+        <argument
+            android:name="origin"
+            app:argType="string" />
+        <argument
+            android:name="destination"
+            app:argType="string" />
+        <argument
+            android:name="date"
+            app:argType="string" />
+        <argument
+            android:name="passengers"
+            app:argType="integer" />
+        <argument
+            android:name="seatClass"
+            app:argType="string" />
+    </fragment>
 </navigation>

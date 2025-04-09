@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Selected state - orange stroke -->
+    <item android:color="#EC441E" android:state_selected="true"/>
+    <item android:color="#EC441E" android:state_checked="true"/>
+
+    <!-- Pressed state - slightly darker orange -->
+    <item android:color="#D13A18" android:state_pressed="true"/>
+
+    <!-- Default state - orange stroke -->
+    <item android:color="#EC441E"/>
+</selector>

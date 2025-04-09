@@ -1,46 +1,53 @@
 package com.group.FlyNest.Fragment
 
 import android.app.DatePickerDialog
-import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.amadeus.Amadeus
-import com.amadeus.Params
-import com.amadeus.exceptions.NetworkException
-import com.amadeus.exceptions.ResponseException
 import com.group.FlyNest.R
 import com.group.FlyNest.databinding.FragmentHomeBinding
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import java.io.Serializable
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var amadeus: Amadeus
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    // Malaysian airports list with codes and names
+    private val malaysianAirports = listOf(
+        "KUL - Kuala Lumpur International Airport",
+        "PEN - Penang International Airport",
+        "LGK - Langkawi International Airport",
+        "JHB - Senai International Airport",
+        "BKI - Kota Kinabalu International Airport",
+        "TWU - Tawau Airport",
+        "MYY - Miri Airport",
+        "KCH - Kuching International Airport",
+        "SZB - Sultan Abdul Aziz Shah Airport",
+        "IPH - Sultan Azlan Shah Airport"
+    )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Initialize Amadeus client with hardcoded credentials (NOT SECURE - FOR TESTING ONLY)
-        amadeus = Amadeus.builder("BXTxSAL4THOZAnRZh6g0FkmjTu7CwKAw", "OuGa0Aurv9ZyeTdt")
-            .setHost("test.api.amadeus.com")
-            .build()
-    }
+    private val seatClasses = listOf(
+        "Economy Class",
+        "Premium Economy",
+        "Business Class",
+        "First Class"
+    )
+
+    private val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    private var passengerCount = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +60,12 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setupDatePicker()
+        setupPassengerCount()
+        setupAutoCompleteAirports()
+        setupSeatClassDropdown()
+        setupSwapButton()
         setupSearchButton()
     }
 
@@ -76,223 +88,191 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupSearchButton() {
-        binding.searchButton.setOnClickListener {
-            val origin = binding.originInput.text.toString().trim().uppercase()
-            val destination = binding.destinationInput.text.toString().trim().uppercase()
-            val date = binding.dateInput.text.toString()
+    private fun setupPassengerCount() {
+        binding.btnIncrement.setOnClickListener {
+            if (passengerCount < 9) {
+                passengerCount++
+                binding.tvPassengerCount.text = passengerCount.toString()
+            }
+        }
 
-            if (validateInputs(origin, destination, date)) {
-                searchFlights(origin, destination, date)
+        binding.btnDecrement.setOnClickListener {
+            if (passengerCount > 1) {
+                passengerCount--
+                binding.tvPassengerCount.text = passengerCount.toString()
             }
         }
     }
 
-    private fun validateInputs(origin: String, destination: String, date: String): Boolean {
+    private fun setupAutoCompleteAirports() {
+        val airportAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            malaysianAirports
+        )
+
+        (binding.originInput as? AutoCompleteTextView)?.apply {
+            setAdapter(airportAdapter)
+            threshold = 1
+            setOnItemClickListener { _, _, position, _ ->
+                setText(malaysianAirports[position].substring(0, 3))
+            }
+        }
+
+        (binding.destinationInput as? AutoCompleteTextView)?.apply {
+            setAdapter(airportAdapter)
+            threshold = 1
+            setOnItemClickListener { _, _, position, _ ->
+                setText(malaysianAirports[position].substring(0, 3))
+            }
+        }
+    }
+
+    private fun setupSeatClassDropdown() {
+        val seatClassAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            seatClasses
+        )
+
+        binding.seatClassInput.apply {
+            setAdapter(seatClassAdapter)
+            threshold = 1
+            setOnClickListener {
+                showDropDown()
+            }
+            setOnItemClickListener { _, _, position, _ ->
+                setText(seatClasses[position], false)
+            }
+            setText(seatClasses[0], false)
+        }
+    }
+
+    private fun setupSwapButton() {
+        binding.btnSwap.setOnClickListener {
+            val origin = binding.originInput.text.toString()
+            val destination = binding.destinationInput.text.toString()
+
+            binding.originInput.setText(destination)
+            binding.destinationInput.setText(origin)
+
+            binding.originLayout.error = null
+            binding.destinationLayout.error = null
+        }
+    }
+
+    private fun setupSearchButton() {
+        binding.searchButton.setOnClickListener {
+            val origin = binding.originInput.text.toString().trim()
+            val destination = binding.destinationInput.text.toString().trim()
+            val date = binding.dateInput.text.toString()
+            val seatClass = binding.seatClassInput.text.toString()
+
+            if (validateInputs(origin, destination, date, seatClass)) {
+                val originCode = if (origin.length > 3) origin.substring(0, 3) else origin
+                val destCode = if (destination.length > 3) destination.substring(0, 3) else destination
+
+                searchFlights(originCode, destCode, date, seatClass, passengerCount)
+            }
+        }
+    }
+
+    private fun validateInputs(
+        origin: String,
+        destination: String,
+        date: String,
+        seatClass: String
+    ): Boolean {
         binding.originLayout.error = null
         binding.destinationLayout.error = null
         binding.dateLayout.error = null
+        binding.seatClassLayout.error = null
 
-        when {
-            origin.isEmpty() -> {
-                binding.originLayout.error = "Please enter origin airport code"
-                return false
-            }
-            destination.isEmpty() -> {
-                binding.destinationLayout.error = "Please enter destination airport code"
-                return false
-            }
-            date.isEmpty() -> {
-                binding.dateLayout.error = "Please select a date"
-                return false
-            }
-            origin == destination -> {
-                binding.originLayout.error = "Origin and destination cannot be the same"
-                return false
-            }
-            !origin.matches(Regex("^[A-Z]{3}$")) -> {
-                binding.originLayout.error = "Invalid IATA code (3 letters)"
-                return false
-            }
-            !destination.matches(Regex("^[A-Z]{3}$")) -> {
-                binding.destinationLayout.error = "Invalid IATA code (3 letters)"
-                return false
-            }
-        }
-        return true
-    }
+        var isValid = true
 
-    private fun isNetworkAvailable(): Boolean {
-        val connectivityManager = requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val network = connectivityManager.activeNetwork ?: return false
-        val capabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
-        return capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-    }
-
-    private fun searchFlights(origin: String, destination: String, date: String) {
-        if (!isNetworkAvailable()) {
-            println("Network unavailable - skipping API call")
-            Toast.makeText(requireContext(), "No internet connection available", Toast.LENGTH_LONG).show()
-            binding.progressBar.visibility = View.GONE
-            return
+        // Origin validation
+        val originCode = if (origin.length > 3) origin.substring(0, 3) else origin
+        if (origin.isBlank()) {
+            binding.originLayout.error = "Please select departure airport"
+            isValid = false
+        } else if (!originCode.matches(Regex("^[A-Z]{3}$"))) {
+            binding.originLayout.error = "Invalid airport code"
+            isValid = false
         }
 
+        // Destination validation
+        val destCode = if (destination.length > 3) destination.substring(0, 3) else destination
+        if (destination.isBlank()) {
+            binding.destinationLayout.error = "Please select arrival airport"
+            isValid = false
+        } else if (!destCode.matches(Regex("^[A-Z]{3}$"))) {
+            binding.destinationLayout.error = "Invalid airport code"
+            isValid = false
+        }
+
+        // Check if origin and destination are same
+        if (originCode.isNotBlank() && destCode.isNotBlank() && originCode == destCode) {
+            binding.originLayout.error = "Cannot fly to the same airport"
+            binding.destinationLayout.error = "Cannot fly to the same airport"
+            isValid = false
+        }
+
+        // Date validation
+        if (date.isBlank()) {
+            binding.dateLayout.error = "Please select departure date"
+            isValid = false
+        }
+
+        // Seat class validation
+        if (seatClass.isBlank()) {
+            binding.seatClassLayout.error = "Please select seat class"
+            isValid = false
+        }
+
+        return isValid
+    }
+
+    private fun searchFlights(
+        origin: String,
+        destination: String,
+        date: String,
+        seatClass: String,
+        passengers: Int
+    ) {
         binding.progressBar.visibility = View.VISIBLE
+        Log.d("HomeFragment", "Navigating to flight results with: origin=$origin, destination=$destination, date=$date, seatClass=$seatClass, passengers=$passengers")
 
         lifecycleScope.launch {
             try {
-                val params = Params.with("originLocationCode", origin)
-                    .and("destinationLocationCode", destination)
-                    .and("departureDate", date)
-                    .and("adults", "1")
-                    .and("nonStop", "false")
-                    .and("max", "10")
+                // Simulate API call delay
+                withContext(Dispatchers.IO) { Thread.sleep(1500) }
 
-                val flightOffers = withContext(Dispatchers.IO) {
-                    withRetry(retries = 3, delayMillis = 1000) {
-                        println("Attempting API call to test.api.amadeus.com - Origin: $origin, Destination: $destination, Date: $date")
-                        try {
-                            amadeus.shopping.flightOffersSearch.get(params)
-                        } catch (e: Exception) {
-                            println("API call failed on attempt: ${e.javaClass.simpleName} - ${e.message}")
-                            throw e
-                        }
-                    }
+                // Create bundle with search parameters
+                val bundle = Bundle().apply {
+                    putString("origin", origin)
+                    putString("destination", destination)
+                    putString("date", date)
+                    putString("seatClass", seatClass)
+                    putInt("passengers", passengers)
                 }
 
-                println("Flight Offers Size: ${flightOffers.size}")
-                flightOffers.forEachIndexed { index, offer ->
-                    println("Offer $index: ${offer.price.total}, ${offer.itineraries[0].segments[0].departure.iataCode}")
-                }
+                // Navigate to results with parameters
+                findNavController().navigate(
+                    R.id.action_home_to_flight_results,
+                    bundle
+                )
 
-                if (flightOffers.isNotEmpty()) {
-                    val bundle = Bundle().apply {
-                        putSerializable("flights", flightOffers as Serializable)
-                    }
-                    findNavController().navigate(R.id.action_home_to_flight_results, bundle)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "No flights found for $origin to $destination on $date",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            } catch (e: NetworkException) {
-                println("NetworkException - Message: ${e.message}, Stacktrace: ${e.stackTraceToString()}")
-                Toast.makeText(
-                    requireContext(),
-                    "Network error: Unable to connect to the server. Please check your connection.",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                // Dummy data fallback only in debug mode
-                val isDebugMode = true // Replace with BuildConfig.DEBUG in production
-                if (isDebugMode) {
-                    println("Falling back to dummy data due to NetworkException")
-                    val dummyOffers = arrayOf(
-                        DummyFlightOffer(
-                            totalPrice = "500.00",
-                            flightNumber = "AA123",
-                            originCode = origin,
-                            destinationCode = destination,
-                            departureTime = "$date 10:00:00",
-                            arrivalTime = "$date 15:30:00",
-                            duration = "PT5H30M"
-                        )
-                    )
-                    val bundle = Bundle().apply {
-                        putSerializable("dummy_flights", dummyOffers)
-                    }
-                    findNavController().navigate(R.id.action_home_to_flight_results, bundle)
-                }
-            } catch (e: ResponseException) {
-                println("ResponseException - Description: ${e.description}, Code: ${e.code}, Cause: ${e.cause}, Stacktrace: ${e.stackTraceToString()}")
-                if (e.response != null) {
-                    println("Response Body: ${e.response.body}")
-                    println("Status Code: ${e.response.statusCode}")
-                }
-                val errorMessage = when (e.code) {
-                    "401" -> "Authentication failed. Please contact support."
-                    "400" -> "Invalid input. Please check your airport codes and date."
-                    "429" -> "Too many requests. Please try again later."
-                    else -> "API Error: ${e.description ?: "Unknown issue"} (Code: ${e.code})"
-                }
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
-
-                // Dummy data fallback only in debug mode
-                if (isDebugMode) {
-                    println("Falling back to dummy data due to ResponseException")
-                    val dummyOffers = arrayOf(
-                        DummyFlightOffer(
-                            totalPrice = "500.00",
-                            flightNumber = "AA123",
-                            originCode = origin,
-                            destinationCode = destination,
-                            departureTime = "$date 10:00:00",
-                            arrivalTime = "$date 15:30:00",
-                            duration = "PT5H30M"
-                        )
-                    )
-                    val bundle = Bundle().apply {
-                        putSerializable("dummy_flights", dummyOffers)
-                    }
-                    findNavController().navigate(R.id.action_home_to_flight_results, bundle)
-                }
             } catch (e: Exception) {
-                println("Unexpected Error: ${e.message}, Stacktrace: ${e.stackTraceToString()}")
-                Toast.makeText(
-                    requireContext(),
-                    "Unexpected error: ${e.message}",
-                    Toast.LENGTH_LONG
-                ).show()
+                Log.e("HomeFragment", "Navigation error: ${e.message}")
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
             } finally {
                 binding.progressBar.visibility = View.GONE
             }
         }
     }
 
-    // Retry logic for transient network failures
-    private suspend fun <T> withRetry(
-        retries: Int = 3,
-        delayMillis: Long = 1000,
-        block: suspend () -> T
-    ): T {
-        var lastException: Exception? = null
-        repeat(retries) { attempt ->
-            try {
-                println("Retry attempt ${attempt + 1} of $retries")
-                return block()
-            } catch (e: NetworkException) {
-                lastException = e
-                println("NetworkException on attempt ${attempt + 1}: ${e.message}")
-                if (attempt == retries - 1) throw e
-                delay(delayMillis)
-            } catch (e: Exception) {
-                lastException = e
-                println("Other exception on attempt ${attempt + 1}: ${e.message}")
-                throw e // Non-network exceptions are not retried
-            }
-        }
-        throw lastException ?: IllegalStateException("Retry logic failed without an exception")
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-    companion object {
-        fun newInstance() = HomeFragment()
-    }
 }
-
-// Custom Serializable class for dummy flight data
-data class DummyFlightOffer(
-    val totalPrice: String,
-    val flightNumber: String,
-    val originCode: String,
-    val destinationCode: String,
-    val departureTime: String,
-    val arrivalTime: String,
-    val duration: String
-) : Serializable
