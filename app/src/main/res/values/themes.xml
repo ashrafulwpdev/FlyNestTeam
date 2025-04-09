@@ -1,9 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.LoginAndSignUpWithFireBase" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Base theme -->
+    <style name="Base.Theme.FlyNest" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Disable dynamic color -->
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="dynamicColorThemeOverlay">@null</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/white</item>
+        <item name="android:windowBackground">@color/white</item>
+        <item name="colorOnSurface">@color/black</item>
+
+        <!-- Bottom navigation colors -->
+        <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
     </style>
 
-    <style name="Theme.LoginAndSignUpWithFireBase" parent="Base.Theme.LoginAndSignUpWithFireBase" />
+    <style name="Theme.FlyNest" parent="Base.Theme.FlyNest" />
+
+    <!-- Bottom Navigation Style -->
+    <style name="BottomNavigationStyle" parent="Widget.Material3.BottomNavigationView">
+        <item name="itemTextColor">@color/bottom_nav_colors</item>
+        <item name="itemIconTint">@color/bottom_nav_colors</item>
+        <item name="android:background">@color/white</item>
+        <item name="materialThemeOverlay">@null</item>
+    </style>
 </resources>

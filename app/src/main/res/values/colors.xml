@@ -2,8 +2,6 @@
 <resources>
     <!-- Primary Colors -->
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="primary_color">#EC441E</color>
     <color name="secondary_color">#FF9800</color>
     <color name="accent_color">#03A9F4</color>
 
@@ -56,9 +54,16 @@
     <color name="chip_stroke">#EC441E</color>
     <color name="chip_text_selected">#FFFFFF</color>
     <color name="chip_text_unselected">#EC441E</color>
+    <color name="gray_dark">#212121</color>
+    <color name="colorOrange">#EC441E</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="background_color">#F5F5F5</color>
+    <!-- Keep this in res/values/colors.xml -->
+    <color name="orange_primary">#FF5722</color>
+
+    <!-- Remove any duplicate in other colors.xml files -->
+
     <!-- Your brand orange -->
-    <color name="primary_dark">#C23819</color>
-    <color name="primary_light">#FF7A4D</color>
     <!-- Backgrounds -->
     <color name="surface">#FFFFFF</color>
     <!-- Text Colors -->
@@ -71,11 +76,23 @@
     <!-- States -->
     <color name="white_alpha_50">#80FFFFFF</color>
     <color name="black_alpha_10">#1A000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary_color">#EC441E</color>
+    <color name="primary_light">#FF7A4D</color>
+    <color name="primary_dark">#C23819</color>
+    <!-- Bottom Navigation Colors -->
+    <color name="bottom_nav_selected">#FF000000</color>       <!-- Pure black for selected item -->
+    <color name="bottom_nav_unselected">#99000000</color>     <!-- Semi-transparent black (60%) -->
+    <color name="bottom_nav_background">#FFFFFFFF</color>      <!-- Pure white background -->
+    <color name="bottom_nav_ripple">#1A000000</color>         <!-- Light ripple effect (10% black) -->
+
     <!-- Special Colors -->
-      <!-- For highlighting best prices -->
+    <!-- For highlighting best prices -->
     <color name="gray_light">#EEEEEE</color>
     <!-- Chip Colors -->
     <color name="chip_background">#E0E0E0</color>
     <color name="chip_selected">#EC441E</color>
-
+    <color name="orange_dark">#E64A19</color>
+    <color name="orange_light">#FFCCBC</color>
+    <color name="gray_mid">#9E9E9E</color>
 </resources>

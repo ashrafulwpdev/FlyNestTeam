@@ -22,7 +22,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LoginAndSignUpWithFireBase"
+        android:theme="@style/Theme.FlyNest"
+        android:hardwareAccelerated="true"
         tools:targetApi="31">
 
         <!-- WelcomeScreen is the launcher activity -->
@@ -45,11 +46,6 @@
             android:name=".SignUpActivity"
             android:exported="false" />
 
-        <!-- PhoneNumber -->
-        <activity
-            android:name=".phoneNumber"
-            android:exported="false" />
-
         <!-- ForgotPassword -->
         <activity
             android:name=".ForgotPassword"
@@ -58,6 +54,15 @@
         <!-- MainActivity -->
         <activity
             android:name=".MainActivity"
+            android:exported="true" />
+
+        <activity android:name=".activity.PaymentActivity">
+            <!-- If this activity has any specific intent filters, add them here -->
+        </activity>
+
+        <!-- PassengerInfoActivity -->
+        <activity
+            android:name=".activity.PassengerInfoActivity"
             android:exported="true" />
     </application>
 

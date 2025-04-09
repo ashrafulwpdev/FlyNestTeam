@@ -8,13 +8,13 @@ import kotlinx.parcelize.Parcelize
 data class Flight(
     val airline: String,
     val flightNumber: String,
+    val departureAirport: String,
+    val arrivalAirport: String,
     val departureTime: String,
     val arrivalTime: String,
     val duration: String,
     val price: Int,
     val stops: Int,
     @DrawableRes val airlineLogo: Int,
-    val departureAirport: String,
-    val arrivalAirport: String,
     val flightDate: String
 ) : Parcelable

@@ -1,5 +1,6 @@
 package com.group.FlyNest.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.group.FlyNest.R
+import com.group.FlyNest.activity.PassengerInfoActivity
 import com.group.FlyNest.adapter.FlightAdapter
 import com.group.FlyNest.databinding.FragmentFlightResultsBinding
 import com.group.FlyNest.model.Flight
@@ -66,13 +68,25 @@ class FlightResultsFragment : Fragment() {
             adapter = flightAdapter
             setHasFixedSize(true)
         }
+
+        flightAdapter.onBookNowClickListener = { flight ->
+            navigateToPassengerInfo(flight)
+        }
+    }
+
+    private fun navigateToPassengerInfo(flight: Flight) {
+        Intent(requireContext(), PassengerInfoActivity::class.java).apply {
+            putExtra(PassengerInfoActivity.EXTRA_FLIGHT, flight)
+            putExtra("passengers", arguments?.getInt("passengers", 1) ?: 1)
+            putExtra("seatClass", arguments?.getString("seatClass") ?: "Economy")
+            startActivity(this)
+        }
     }
 
     private fun loadFlights(origin: String, destination: String, date: String) {
         binding.loadingIndicator.visibility = View.VISIBLE
         binding.emptyState.visibility = View.GONE
 
-        // Simulate network delay
         binding.flightsRecyclerView.postDelayed({
             val flights = generateSampleFlights(origin, destination, date)
 
@@ -90,61 +104,32 @@ class FlightResultsFragment : Fragment() {
     }
 
     private fun generateSampleFlights(origin: String, destination: String, date: String): List<Flight> {
-        return listOf(
+        val airlines = listOf(
+            Triple("Malaysia Airlines", R.drawable.logo_malaysia_airlines, 0),
+            Triple("AirAsia", R.drawable.logo_airasia, 1),
+            Triple("Malindo Air", R.drawable.logo_malindo, 0),
+            Triple("Firefly", R.drawable.logo_firefly, 1),
+            Triple("Batik Air", R.drawable.logo_batik_air, 2)
+        )
+
+        return airlines.map {
+            val (name, logoRes, stops) = it
             Flight(
-                airline = "Malaysia Airlines",
-                flightNumber = "MH${(1000..9999).random()}",
-                departureTime = "08:00",
-                arrivalTime = "10:30",
-                duration = "2h 30m",
-                price = (250..400).random(),
-                stops = 0,
-                airlineLogo = R.drawable.logo_malaysia_airlines,
-                departureAirport = origin,
-                arrivalAirport = destination,
-                flightDate = date
-            ),
-            Flight(
-                airline = "AirAsia",
-                flightNumber = "AK${(1000..9999).random()}",
-                departureTime = "11:45",
-                arrivalTime = "14:15",
-                duration = "2h 30m",
-                price = (150..300).random(),
-                stops = 0,
-                airlineLogo = R.drawable.logo_airasia,
-                departureAirport = origin,
-                arrivalAirport = destination,
-                flightDate = date
-            ),
-            Flight(
-                airline = "Batik Air",
-                flightNumber = "ID${(1000..9999).random()}",
-                departureTime = "15:20",
-                arrivalTime = "18:50",
-                duration = "3h 30m",
-                price = (300..450).random(),
-                stops = 1,
-                airlineLogo = R.drawable.logo_batik_air,
-                departureAirport = origin,
-                arrivalAirport = destination,
-                flightDate = date
-            ),
-            Flight(
-                airline = "Firefly",
-                flightNumber = "FY${(1000..9999).random()}",
-                departureTime = "06:15",
-                arrivalTime = "07:45",
-                duration = "1h 30m",
-                price = (200..350).random(),
-                stops = 0,
-                airlineLogo = R.drawable.logo_firefly,
+                airline = name,
+                flightNumber = "${name.take(2).uppercase()}${(1000..9999).random()}",
+                departureTime = listOf("08:00", "10:45", "14:30", "18:15").random(),
+                arrivalTime = listOf("10:30", "13:00", "17:00", "20:30").random(),
+                duration = listOf("2h 30m", "2h 15m", "2h 45m").random(),
+                price = (200..500).random(),
+                stops = stops,
+                airlineLogo = logoRes,
                 departureAirport = origin,
                 arrivalAirport = destination,
                 flightDate = date
             )
-        ).sortedBy { it.price } // Sort by price (lowest first)
+        }.sortedBy { it.price }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

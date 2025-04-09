@@ -13,6 +13,7 @@ import java.util.*
 class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(FlightDiffCallback()) {
 
     var onItemClickListener: ((Flight) -> Unit)? = null
+    var onBookNowClickListener: ((Flight) -> Unit)? = null
 
     inner class FlightViewHolder(private val binding: ItemFlightBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -36,7 +37,7 @@ class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(Flight
                 airlineLogo.setImageResource(flight.airlineLogo)
 
                 root.setOnClickListener { onItemClickListener?.invoke(flight) }
-                bookButton.setOnClickListener { onItemClickListener?.invoke(flight) }
+                bookButton.setOnClickListener { onBookNowClickListener?.invoke(flight) }
             }
         }
 
