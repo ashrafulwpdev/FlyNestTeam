@@ -28,7 +28,11 @@ class FlightDetailsDialog : DialogFragment() {
             flightNumber.text = flight.flightNumber
             departureTime.text = flight.departureTime
             arrivalTime.text = flight.arrivalTime
+<<<<<<< HEAD
             duration.text = formatDuration(flight.duration) // Fixed: Convert Int to String
+=======
+            duration.text = flight.duration
+>>>>>>> upstream/main
             price.text = "RM${flight.price}"
             stops.text = if (flight.stops == 0) "Non-stop" else "${flight.stops} stop(s)"
             airlineLogo.setImageResource(flight.airlineLogo)
@@ -36,6 +40,7 @@ class FlightDetailsDialog : DialogFragment() {
 
         return AlertDialog.Builder(requireContext())
             .setView(binding.root)
+<<<<<<< HEAD
             .setPositiveButton("Book Now") { _, _ ->
                 // Add booking action here if needed
             }
@@ -54,4 +59,10 @@ class FlightDetailsDialog : DialogFragment() {
             "${remainingMinutes}m"
         }
     }
+=======
+            .setPositiveButton("Book Now") { _, _ -> }
+            .setNegativeButton("Close") { _, _ -> }
+            .create()
+    }
+>>>>>>> upstream/main
 }

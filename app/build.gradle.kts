@@ -3,7 +3,10 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("kotlin-parcelize")
+<<<<<<< HEAD
 
+=======
+>>>>>>> upstream/main
 }
 
 android {
@@ -67,12 +70,21 @@ dependencies {
     // For CircleImageView
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+<<<<<<< HEAD
 // For Glide (to load images)
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation(libs.firebase.database.ktx)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 // For handling runtime permissions (if needed)
+=======
+    // For Glide (to load images)
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("com.google.android.material:material:1.6.0")
+
+    // For handling runtime permissions (if needed)
+>>>>>>> upstream/main
     implementation ("com.karumi:dexter:6.2.3")
 
     // Coroutines and Lifecycle for async operations
@@ -86,6 +98,12 @@ dependencies {
     // Amadeus API
     implementation(libs.amadeus.java)
 
+<<<<<<< HEAD
+=======
+    // For proper ripple effects
+    implementation("androidx.compose.foundation:foundation:1.6.6")
+
+>>>>>>> upstream/main
     // Gson for JSON parsing
     implementation(libs.gson)
     implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1")
@@ -93,8 +111,15 @@ dependencies {
     implementation ("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")
     implementation ("androidx.recyclerview:recyclerview:1.3.2")
+<<<<<<< HEAD
     implementation ("com.google.android.material:material:1.11.0")
     implementation ("androidx.fragment:fragment-ktx:1.6.2")
+=======
+    implementation ("androidx.fragment:fragment-ktx:1.6.2")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+    implementation("com.google.android.material:material:1.11.0")
+>>>>>>> upstream/main
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -103,7 +128,11 @@ dependencies {
 
     // RecyclerView
     implementation(libs.androidx.recyclerview)
+<<<<<<< HEAD
 
     // ZXing for QR code generation
     implementation ("com.google.zxing:core:3.5.2")
 }
+=======
+}
+>>>>>>> upstream/main

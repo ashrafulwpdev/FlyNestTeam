@@ -2,16 +2,37 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+<<<<<<< HEAD
     <!-- Add Internet permission -->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <!-- Add these permissions outside the <application> tag -->
+=======
+    <!-- Internet permission (still needed for Firebase) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Camera feature (optional, keep if you plan to add camera functionality later) -->
+>>>>>>> upstream/main
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
+<<<<<<< HEAD
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+=======
+    <!-- Storage permissions for photo selection -->
+    <!-- For Android 12 and below -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- Not needed for profile photo selection, remove unless used elsewhere -->
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+
+    <!-- For Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- Camera permission (optional, keep if you plan to add camera functionality) -->
+>>>>>>> upstream/main
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -26,7 +47,11 @@
         android:hardwareAccelerated="true"
         tools:targetApi="31">
 
+<<<<<<< HEAD
         <!-- WelcomeScreen is the launcher activity -->
+=======
+        <!-- WelcomeScreen -->
+>>>>>>> upstream/main
         <activity
             android:name=".WelcomeScreen"
             android:exported="true">
@@ -65,11 +90,14 @@
         <activity
             android:name=".activity.PassengerInfoActivity"
             android:exported="true" />
+<<<<<<< HEAD
 
         <!-- BoardingPassActivity -->
         <activity
             android:name=".activity.BoardingPassActivity"
             android:exported="false" />
+=======
+>>>>>>> upstream/main
     </application>
 
 </manifest>

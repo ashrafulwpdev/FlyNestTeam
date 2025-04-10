@@ -1,21 +1,31 @@
 package com.group.FlyNest.activity
 
+<<<<<<< HEAD
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+=======
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+>>>>>>> upstream/main
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+<<<<<<< HEAD
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.group.FlyNest.databinding.ActivityPaymentBinding
 import com.group.FlyNest.databinding.ItemPassengerSummaryBinding
+=======
+import com.group.FlyNest.databinding.ActivityPaymentBinding
+>>>>>>> upstream/main
 import com.group.FlyNest.model.Flight
 import com.group.FlyNest.model.Passenger
 import com.group.FlyNest.util.CardUtils
@@ -26,6 +36,7 @@ class PaymentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPaymentBinding
     private var isProcessingPayment = false
+<<<<<<< HEAD
     private lateinit var flight: Flight
     private lateinit var passengers: ArrayList<Passenger>
     private var passengersCount: Int = 1
@@ -36,6 +47,21 @@ class PaymentActivity : AppCompatActivity() {
     private val malaysianBanks = listOf(
         "Maybank", "CIMB Bank", "Public Bank", "RHB Bank", "Hong Leong Bank",
         "AmBank", "Bank Rakyat", "Bank Islam", "OCBC Bank", "HSBC Bank"
+=======
+
+    // Malaysian top 10 banks
+    private val malaysianBanks = listOf(
+        "Maybank",
+        "CIMB Bank",
+        "Public Bank",
+        "RHB Bank",
+        "Hong Leong Bank",
+        "AmBank",
+        "Bank Rakyat",
+        "Bank Islam",
+        "OCBC Bank",
+        "HSBC Bank"
+>>>>>>> upstream/main
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,6 +69,7 @@ class PaymentActivity : AppCompatActivity() {
         binding = ActivityPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+<<<<<<< HEAD
         auth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
@@ -95,6 +122,33 @@ class PaymentActivity : AppCompatActivity() {
     private fun setupPassengerSummary() {
         binding.passengerRecyclerView.layoutManager = LinearLayoutManager(this)
         binding.passengerRecyclerView.adapter = PassengerSummaryAdapter(passengers)
+=======
+        setupUI()
+        setupPaymentMethodSelection()
+        setupFormValidation()
+        setupPayNowButton()
+    }
+
+    private fun setupUI() {
+        // Getting Flight and Passenger data from the intent
+        val flight = intent.getParcelableExtra<Flight>("flight")
+        val passenger = intent.getParcelableExtra<Passenger>("passenger")
+
+        // Populate UI with flight info
+        if (flight != null && passenger != null) {
+            binding.flightInfo.text = "Flight: ${flight.departureAirport} → ${flight.arrivalAirport}"
+            binding.departureDate.text = "Date: ${formatFlightDate(flight.flightDate)}"
+            binding.price.text = "Amount: RM ${String.format("%.2f", flight.price.toDouble())}"
+        }
+
+        // Set up bank spinner with Malaysian banks
+        val bankAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            malaysianBanks
+        )
+        binding.bankSpinner.setAdapter(bankAdapter)
+>>>>>>> upstream/main
     }
 
     private fun formatFlightDate(dateString: String): String {
@@ -102,34 +156,80 @@ class PaymentActivity : AppCompatActivity() {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val outputFormat = SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault())
             val date = inputFormat.parse(dateString)
+<<<<<<< HEAD
             outputFormat.format(date ?: return dateString)
+=======
+            outputFormat.format(date!!)
+>>>>>>> upstream/main
         } catch (e: Exception) {
             dateString
         }
     }
 
     private fun setupPaymentMethodSelection() {
+<<<<<<< HEAD
         binding.paymentCard.isChecked = true
         showPaymentDetails(binding.paymentCard.id)
 
+=======
+        // Set default selection
+        binding.paymentCard.isChecked = true
+        showPaymentDetails(binding.paymentCard.id)
+
+        // Manually handle clicks on the parent layouts
+        listOf(
+            binding.paymentCard to binding.paymentCard.id,
+            binding.paymentPaypal to binding.paymentPaypal.id,
+            binding.paymentBankTransfer to binding.paymentBankTransfer.id
+        ).forEach { (radioButton, id) ->
+            // Get the parent LinearLayout of each RadioButton
+            val parent = radioButton.parent as? ViewGroup
+            parent?.setOnClickListener {
+                binding.paymentMethodGroup.clearCheck()
+                radioButton.isChecked = true
+                showPaymentDetails(id)
+            }
+        }
+
+        // Handle direct radio button clicks
+>>>>>>> upstream/main
         binding.paymentMethodGroup.setOnCheckedChangeListener { _, checkedId ->
             showPaymentDetails(checkedId)
         }
     }
 
     private fun showPaymentDetails(checkedId: Int) {
+<<<<<<< HEAD
+=======
+        // Hide all payment detail layouts first
+>>>>>>> upstream/main
         binding.cardDetailsLayout.visibility = View.GONE
         binding.paypalDetailsLayout.visibility = View.GONE
         binding.bankDetailsLayout.visibility = View.GONE
 
+<<<<<<< HEAD
         when (checkedId) {
             binding.paymentCard.id -> binding.cardDetailsLayout.visibility = View.VISIBLE
             binding.paymentPaypal.id -> binding.paypalDetailsLayout.visibility = View.VISIBLE
             binding.paymentBankTransfer.id -> binding.bankDetailsLayout.visibility = View.VISIBLE
+=======
+        // Show only the selected payment method details
+        when (checkedId) {
+            binding.paymentCard.id -> {
+                binding.cardDetailsLayout.visibility = View.VISIBLE
+            }
+            binding.paymentPaypal.id -> {
+                binding.paypalDetailsLayout.visibility = View.VISIBLE
+            }
+            binding.paymentBankTransfer.id -> {
+                binding.bankDetailsLayout.visibility = View.VISIBLE
+            }
+>>>>>>> upstream/main
         }
     }
 
     private fun setupFormValidation() {
+<<<<<<< HEAD
         binding.cardNumber.addTextChangedListener(object : TextWatcher {
             private var isFormatting = false
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -167,6 +267,60 @@ class PaymentActivity : AppCompatActivity() {
                     }
                 }
                 isFormatting = false
+=======
+        // Card number formatting and validation
+        binding.cardNumber.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                s?.let {
+                    // Format as XXXX XXXX XXXX XXXX
+                    if (it.length == 4 || it.length == 9 || it.length == 14) {
+                        if (it.length > 19) {
+                            it.delete(19, it.length)
+                        } else {
+                            it.append(" ")
+                        }
+                    }
+                }
+            }
+        })
+
+        // Expiry date formatting (MM/YY)
+        binding.cardExpiryDate.addTextChangedListener(object : TextWatcher {
+            private var current = ""
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                if (s.toString() != current) {
+                    val clean = s.toString().replace("[^\\d]".toRegex(), "")
+                    var cleanC = current.replace("[^\\d]".toRegex(), "")
+
+                    if (clean.length == 2) {
+                        cleanC = clean
+                        val month = clean.toInt()
+                        if (month > 12) {
+                            binding.cardExpiryDate.error = "Invalid month"
+                            return
+                        }
+                        binding.cardExpiryDate.error = null
+                        current = "$clean/"
+                        binding.cardExpiryDate.setText(current)
+                        binding.cardExpiryDate.setSelection(current.length)
+                    } else if (clean.length > 2) {
+                        val month = clean.substring(0, 2)
+                        val monthInt = month.toInt()
+                        if (monthInt > 12) {
+                            binding.cardExpiryDate.error = "Invalid month"
+                            return
+                        }
+                        binding.cardExpiryDate.error = null
+                        current = "$month/${clean.substring(2, 4)}"
+                        binding.cardExpiryDate.setText(current)
+                        binding.cardExpiryDate.setSelection(current.length)
+                    }
+                }
+>>>>>>> upstream/main
             }
         })
     }
@@ -196,7 +350,11 @@ class PaymentActivity : AppCompatActivity() {
     }
 
     private fun validatePaymentDetails(paymentMethod: String): Boolean {
+<<<<<<< HEAD
         when (paymentMethod) {
+=======
+        return when (paymentMethod) {
+>>>>>>> upstream/main
             "card" -> {
                 val cardNumber = binding.cardNumber.text.toString().replace(" ", "")
                 val expiry = binding.cardExpiryDate.text.toString()
@@ -207,13 +365,18 @@ class PaymentActivity : AppCompatActivity() {
                     return false
                 }
 
+<<<<<<< HEAD
                 val (month, year) = expiry.split("/").let { it.getOrNull(0) to it.getOrNull(1) }
                 val monthInt = month?.toIntOrNull()
                 if (monthInt !in 1..12 || year?.length != 2) {
+=======
+                if (expiry.length != 5 || !expiry.contains("/")) {
+>>>>>>> upstream/main
                     binding.cardExpiryDate.error = "Invalid expiry date (MM/YY)"
                     return false
                 }
 
+<<<<<<< HEAD
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR) % 100
                 val currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1
                 val expiryYear = year?.toIntOrNull() ?: 0
@@ -222,10 +385,17 @@ class PaymentActivity : AppCompatActivity() {
                     return false
                 }
 
+=======
+>>>>>>> upstream/main
                 if (cvv.length != 3) {
                     binding.cardCVV.error = "CVV must be 3 digits"
                     return false
                 }
+<<<<<<< HEAD
+=======
+
+                true
+>>>>>>> upstream/main
             }
             "paypal" -> {
                 val email = binding.paypalEmail.text.toString()
@@ -240,6 +410,7 @@ class PaymentActivity : AppCompatActivity() {
                     binding.paypalPassword.error = "Password must be at least 6 characters"
                     return false
                 }
+<<<<<<< HEAD
             }
             "bank_transfer" -> {
                 val bank = binding.bankSpinner.text.toString()
@@ -248,6 +419,21 @@ class PaymentActivity : AppCompatActivity() {
 
                 if (bank.isEmpty() || bank !in malaysianBanks) {
                     Toast.makeText(this, "Please select a valid bank", Toast.LENGTH_SHORT).show()
+=======
+
+                true
+            }
+            "bank_transfer" -> {
+                // Explicitly casting bankSpinner to Spinner
+                val bankSpinner = binding.bankSpinner as android.widget.Spinner
+                val bank = bankSpinner.selectedItem.toString()  // Use selectedItem here
+
+                val username = binding.bankUsername.text.toString()
+                val password = binding.bankPassword.text.toString()
+
+                if (bank.isEmpty()) {
+                    Toast.makeText(this, "Please select a bank", Toast.LENGTH_SHORT).show()
+>>>>>>> upstream/main
                     return false
                 }
 
@@ -260,6 +446,7 @@ class PaymentActivity : AppCompatActivity() {
                     binding.bankPassword.error = "Password must be at least 6 characters"
                     return false
                 }
+<<<<<<< HEAD
             }
         }
         return true
@@ -346,3 +533,42 @@ class PaymentActivity : AppCompatActivity() {
         const val EXTRA_FLIGHT = "flight"
     }
 }
+=======
+
+                true
+            }
+            else -> false
+        }
+    }
+
+
+
+    private fun processPayment(paymentMethod: String) {
+        isProcessingPayment = true
+        binding.payNowButton.isEnabled = false
+        binding.payNowButton.text = "Processing..."
+
+        // Simulate payment processing (2 seconds delay)
+        binding.root.postDelayed({
+            isProcessingPayment = false
+            binding.payNowButton.isEnabled = true
+            binding.payNowButton.text = "Pay Now"
+
+            when (paymentMethod) {
+                "card" -> {
+                    Toast.makeText(this, "Card payment processed successfully!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                "paypal" -> {
+                    Toast.makeText(this, "PayPal payment processed successfully!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+                "bank_transfer" -> {
+                    Toast.makeText(this, "Bank transfer initiated successfully!", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+        }, 2000)
+    }
+}
+>>>>>>> upstream/main

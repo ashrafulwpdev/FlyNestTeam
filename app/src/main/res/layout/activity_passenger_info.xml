@@ -37,7 +37,10 @@
 
             <!-- Flight Info Card -->
             <com.google.android.material.card.MaterialCardView
+<<<<<<< HEAD
                 android:id="@+id/flightCard"
+=======
+>>>>>>> upstream/main
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardBackgroundColor="@color/white"
@@ -104,11 +107,100 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+<<<<<<< HEAD
             <!-- RecyclerView for Passenger Forms -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/passengerFormsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+=======
+            <!-- Passenger Title -->
+            <TextView
+                android:id="@+id/passengerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Passenger Details"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="16dp"
+                android:textColor="@color/text_primary" />
+
+            <!-- Full Name Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameContainer"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxStrokeColor="@color/orange_primary"
+                app:hintTextColor="@color/orange_primary"
+                android:hint="Full Name">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Email Address Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailContainer"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxStrokeColor="@color/orange_primary"
+                app:hintTextColor="@color/orange_primary"
+                android:hint="Email Address">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Phone Number Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phoneContainer"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxStrokeColor="@color/orange_primary"
+                app:hintTextColor="@color/orange_primary"
+                android:hint="Phone Number">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phoneInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Passport Number Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passportContainer"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxStrokeColor="@color/orange_primary"
+                app:hintTextColor="@color/orange_primary"
+                android:hint="Passport Number">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passportInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textCapCharacters"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
+>>>>>>> upstream/main
 
             <!-- Submit Button -->
             <com.google.android.material.button.MaterialButton
@@ -123,4 +215,8 @@
                 app:elevation="0dp" />
         </LinearLayout>
     </ScrollView>
+<<<<<<< HEAD
 </RelativeLayout>
+=======
+</RelativeLayout>
+>>>>>>> upstream/main

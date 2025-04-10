@@ -119,7 +119,11 @@ class FlightResultsFragment : Fragment() {
                 flightNumber = "${name.take(2).uppercase()}${(1000..9999).random()}",
                 departureTime = listOf("08:00", "10:45", "14:30", "18:15").random(),
                 arrivalTime = listOf("10:30", "13:00", "17:00", "20:30").random(),
+<<<<<<< HEAD
                 duration = listOf(150, 135, 165).random(), // Fixed: Int values in minutes
+=======
+                duration = listOf("2h 30m", "2h 15m", "2h 45m").random(),
+>>>>>>> upstream/main
                 price = (200..500).random(),
                 stops = stops,
                 airlineLogo = logoRes,
@@ -130,6 +134,10 @@ class FlightResultsFragment : Fragment() {
         }.sortedBy { it.price }
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> upstream/main
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

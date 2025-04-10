@@ -13,11 +13,14 @@
 
         <!-- Bottom navigation colors -->
         <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
+<<<<<<< HEAD
 
         <!-- Status bar color -->
         <item name="android:statusBarColor">@color/white</item>
         <!-- Enable dark status bar icons (API 23+) -->
         <item name="android:windowLightStatusBar">true</item>
+=======
+>>>>>>> upstream/main
     </style>
 
     <style name="Theme.FlyNest" parent="Base.Theme.FlyNest" />

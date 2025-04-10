@@ -24,8 +24,12 @@ class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(Flight
                 flightNumber.text = flight.flightNumber
                 departureTime.text = flight.departureTime
                 arrivalTime.text = flight.arrivalTime
+<<<<<<< HEAD
                 // Convert duration (Int) to a formatted String (e.g., "2h 30m")
                 duration.text = formatDuration(flight.duration)
+=======
+                duration.text = flight.duration
+>>>>>>> upstream/main
                 price.text = "RM${flight.price}"
                 stops.text = when (flight.stops) {
                     0 -> "Non-stop"
@@ -52,6 +56,7 @@ class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(Flight
                 dateString
             }
         }
+<<<<<<< HEAD
 
         private fun formatDuration(minutes: Int): String {
             val hours = minutes / 60
@@ -62,6 +67,8 @@ class FlightAdapter : ListAdapter<Flight, FlightAdapter.FlightViewHolder>(Flight
                 "$remainingMinutes"+"m"
             }
         }
+=======
+>>>>>>> upstream/main
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FlightViewHolder {

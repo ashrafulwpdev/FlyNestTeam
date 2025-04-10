@@ -31,4 +31,11 @@
         <item name="android:drawableTint">@color/colorPrimary</item>
         <item name="android:gravity">center_vertical</item>
     </style>
+<<<<<<< HEAD
+=======
+    <style name="ShapeAppearanceOverlay.Fab.Rounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+>>>>>>> upstream/main
 </resources>
