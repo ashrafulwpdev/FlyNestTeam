@@ -16,13 +16,14 @@ class PassengerInfoActivity : AppCompatActivity() {
     private lateinit var flight: Flight
     private var passengersCount: Int = 1
     private var seatClass: String = "Economy"
+    private var currentPassengerIndex = 1
+    private val passengerList = mutableListOf<Passenger>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPassengerInfoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Retrieve flight and search parameters
         flight = intent.getParcelableExtra(EXTRA_FLIGHT) ?: run {
             finish()
             return
@@ -37,7 +38,6 @@ class PassengerInfoActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        // Setting the toolbar as the action bar
         setSupportActionBar(binding.toolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
@@ -45,23 +45,20 @@ class PassengerInfoActivity : AppCompatActivity() {
             title = "Passenger Details (${passengersCount}x $seatClass)"
         }
 
-        // Action for the back button in toolbar
         binding.toolbar.setNavigationOnClickListener { onBackPressed() }
     }
 
     private fun displayFlightInfo() {
-        // Populating the flight details on the screen
         binding.apply {
             airlineName.text = flight.airline
             flightNumber.text = flight.flightNumber
             routeText.text = "${flight.departureAirport} → ${flight.arrivalAirport}"
             departureDate.text = "${flight.departureTime} • ${formatDate(flight.flightDate)}"
-            price.text = "RM${flight.price * passengersCount}" // Total for all passengers
+            price.text = "RM${flight.price * passengersCount}"
         }
     }
 
     private fun formatDate(dateString: String): String {
-        // Format the date from "yyyy-MM-dd" to "MMM d, yyyy"
         return try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val outputFormat = SimpleDateFormat("MMM d, yyyy", Locale.getDefault())
@@ -73,48 +70,62 @@ class PassengerInfoActivity : AppCompatActivity() {
     }
 
     private fun setupPassengerForm() {
-        // Setting up the passenger form title
-        binding.passengerTitle.text = "Primary Passenger (1 of $passengersCount)"
+        binding.passengerTitle.text = "Passenger ($currentPassengerIndex of $passengersCount)"
     }
 
     private fun setupListeners() {
-        // Button to submit passenger details and navigate to payment screen
         binding.submitButton.setOnClickListener {
             if (validateForm()) {
                 val passenger = createPassengerFromInput()
-                navigateToPayment(passenger)
+                passengerList.add(passenger)
+
+                if (currentPassengerIndex < passengersCount) {
+                    currentPassengerIndex++
+                    clearForm()
+                    setupPassengerForm()
+                } else {
+                    navigateToPayment(passengerList)
+                }
             }
         }
     }
 
     private fun createPassengerFromInput(): Passenger {
-        // Creating a Passenger object from the form input
         return Passenger(
             name = binding.nameInput.text.toString().trim(),
             email = binding.emailInput.text.toString().trim(),
             phone = binding.phoneInput.text.toString().trim(),
             passport = binding.passportInput.text.toString().trim(),
-            isPrimary = true // Assuming the first passenger is always primary
+            isPrimary = (currentPassengerIndex == 1) // Only the first is primary
         )
     }
 
-    private fun navigateToPayment(passenger: Passenger) {
-        // Navigating to PaymentActivity with the necessary data
-        Intent(this, PaymentActivity::class.java).apply {
+    private fun clearForm() {
+        binding.nameInput.text?.clear()
+        binding.emailInput.text?.clear()
+        binding.phoneInput.text?.clear()
+        binding.passportInput.text?.clear()
+
+        binding.nameContainer.error = null
+        binding.emailContainer.error = null
+        binding.phoneContainer.error = null
+        binding.passportContainer.error = null
+    }
+
+    private fun navigateToPayment(passengers: List<Passenger>) {
+        val intent = Intent(this, PaymentActivity::class.java).apply {
             putExtra(EXTRA_FLIGHT, flight)
-            putExtra(EXTRA_PASSENGER, passenger)
+            putParcelableArrayListExtra(EXTRA_PASSENGER_LIST, ArrayList(passengers))
             putExtra("passengersCount", passengersCount)
             putExtra("totalPrice", flight.price * passengersCount)
-            startActivity(this)
         }
+        startActivity(intent)
     }
 
     private fun validateForm(): Boolean {
-        // Validating all form inputs before submission
         var isValid = true
 
         with(binding) {
-            // Name validation
             if (nameInput.text.isNullOrBlank()) {
                 nameContainer.error = "Full name is required"
                 isValid = false
@@ -122,7 +133,6 @@ class PassengerInfoActivity : AppCompatActivity() {
                 nameContainer.error = null
             }
 
-            // Email validation
             if (emailInput.text.isNullOrBlank()) {
                 emailContainer.error = "Email is required"
                 isValid = false
@@ -133,7 +143,6 @@ class PassengerInfoActivity : AppCompatActivity() {
                 emailContainer.error = null
             }
 
-            // Phone validation
             if (phoneInput.text.isNullOrBlank()) {
                 phoneContainer.error = "Phone number is required"
                 isValid = false
@@ -144,7 +153,6 @@ class PassengerInfoActivity : AppCompatActivity() {
                 phoneContainer.error = null
             }
 
-            // Passport validation
             if (passportInput.text.isNullOrBlank()) {
                 passportContainer.error = "Passport number is required"
                 isValid = false
@@ -160,8 +168,7 @@ class PassengerInfoActivity : AppCompatActivity() {
     }
 
     companion object {
-        // Constants for intent extras
         const val EXTRA_FLIGHT = "flight"
-        const val EXTRA_PASSENGER = "passenger"
+        const val EXTRA_PASSENGER_LIST = "passenger_list"
     }
 }

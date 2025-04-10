@@ -5,7 +5,7 @@
     android:id="@+id/navigation"
     app:startDestination="@id/homeFragment">
 
-    <!-- Your other fragments remain the same -->
+    <!-- Existing Fragments -->
     <fragment
         android:id="@+id/bookingFragment2"
         android:name="com.group.FlyNest.Fragment.BookingFragment"
@@ -19,22 +19,35 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.group.FlyNest.Fragment.ProfileFragment"
-        android:label="Profile" />
+        android:label="Profile">
+        <action
+            android:id="@+id/action_profileFragment_to_accountSettingsFragment"
+            app:destination="@id/accountSettingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_notificationSettingsFragment"
+            app:destination="@id/notificationSettingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_privacySettingsFragment"
+            app:destination="@id/privacySettingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_helpSupportFragment"
+            app:destination="@id/helpSupportFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.group.FlyNest.Fragment.HomeFragment"
         android:label="Home">
-
         <action
             android:id="@+id/action_home_to_flight_results"
             app:destination="@id/flightResultsFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/flightResultsFragment"
         android:name="com.group.FlyNest.fragment.FlightResultsFragment"
         android:label="Flight Results"
         tools:layout="@layout/fragment_flight_results">
-
         <argument
             android:name="origin"
             app:argType="string" />
@@ -51,4 +64,52 @@
             android:name="seatClass"
             app:argType="string" />
     </fragment>
+
+    <!-- New Settings Fragments -->
+    <fragment
+        android:id="@+id/accountSettingsFragment"
+        android:name="com.group.FlyNest.Fragment.AccountSettingsFragment"
+        android:label="Account Settings" />
+
+    <fragment
+        android:id="@+id/notificationSettingsFragment"
+        android:name="com.group.FlyNest.Fragment.NotificationSettingsFragment"
+        android:label="Notification Settings" />
+
+    <fragment
+        android:id="@+id/privacySettingsFragment"
+        android:name="com.group.FlyNest.Fragment.PrivacySettingsFragment"
+        android:label="Privacy Settings">
+        <action
+            android:id="@+id/action_privacySettingsFragment_to_blockedUsersFragment"
+            app:destination="@id/blockedUsersFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/helpSupportFragment"
+        android:name="com.group.FlyNest.Fragment.HelpSupportFragment"
+        android:label="Help and Support">
+        <action
+            android:id="@+id/action_helpSupportFragment_to_faqFragment"
+            app:destination="@id/faqFragment" />
+        <action
+            android:id="@+id/action_helpSupportFragment_to_contactUsFragment"
+            app:destination="@id/contactUsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/blockedUsersFragment"
+        android:name="com.group.FlyNest.Fragment.BlockedUsersFragment"
+        android:label="Blocked Users" />
+
+    <!-- FAQ and Contact Us Fragments -->
+    <fragment
+        android:id="@+id/faqFragment"
+        android:name="com.group.FlyNest.Fragment.FAQFragment"
+        android:label="FAQ" />
+
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.group.FlyNest.Fragment.ContactUsFragment"
+        android:label="Contact Us" />
 </navigation>

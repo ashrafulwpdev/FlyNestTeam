@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBackground"
+        android:elevation="4dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Notification Settings"
+            app:titleTextColor="@android:color/black"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="@color/colorPrimary"
+            android:background="@color/colorBackground"
+            app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@color/colorBackground">
+
+            <!-- Push Notifications Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="12dp"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Push Notifications"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/pushSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:thumbTint="@color/colorPrimary"
+                    app:trackTint="@color/colorPrimaryDark"
+                    android:checked="true"/>
+            </LinearLayout>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="8dp"
+                app:dividerColor="@color/colorDivider"/>
+
+            <!-- Email Notifications Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingVertical="12dp"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Email Notifications"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/emailSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:thumbTint="@color/colorPrimary"
+                    app:trackTint="@color/colorPrimaryDark"
+                    android:checked="true"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

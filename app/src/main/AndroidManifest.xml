@@ -2,16 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Add Internet permission -->
+    <!-- Internet permission (still needed for Firebase) -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- Add these permissions outside the <application> tag -->
+    <!-- Camera feature (optional, keep if you plan to add camera functionality later) -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Storage permissions for photo selection -->
+    <!-- For Android 12 and below -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <!-- Not needed for profile photo selection, remove unless used elsewhere -->
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+
+    <!-- For Android 13+ -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <!-- Camera permission (optional, keep if you plan to add camera functionality) -->
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
@@ -26,7 +35,7 @@
         android:hardwareAccelerated="true"
         tools:targetApi="31">
 
-        <!-- WelcomeScreen is the launcher activity -->
+        <!-- WelcomeScreen -->
         <activity
             android:name=".WelcomeScreen"
             android:exported="true">
@@ -56,9 +65,10 @@
             android:name=".MainActivity"
             android:exported="true" />
 
-        <activity android:name=".activity.PaymentActivity">
-            <!-- If this activity has any specific intent filters, add them here -->
-        </activity>
+        <!-- PaymentActivity -->
+        <activity
+            android:name=".activity.PaymentActivity"
+            android:exported="false" />
 
         <!-- PassengerInfoActivity -->
         <activity
