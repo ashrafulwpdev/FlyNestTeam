@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="FlightFilterChip" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_background_selector</item>
+        <item name="chipStrokeColor">@color/chip_stroke_selector</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="chipCornerRadius">8dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+    </style>
+    <style name="Widget.FlyNest.Text.Header" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Widget.FlyNest.Chip.Filter" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipStrokeColor">@color/border</item>
+        <item name="chipBackgroundColor">@color/surface</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+    </style>
+    <style name="PaymentMethodOption">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:button">@null</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:drawableTint">@color/colorPrimary</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+</resources>

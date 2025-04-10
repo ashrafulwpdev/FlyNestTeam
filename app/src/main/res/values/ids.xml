@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="forgotPassword" type="id" />
+    <item name="oneWay" type="id" />
+    <item name="multicity" type="id" />
+    <item name="fromLabel" type="id" />
+    <item name="flightTypeGroup" type="id" />
+    <item name="fromAirport" type="id" />
+    <item name="toLabel" type="id" />
+    <item name="toAirport" type="id" />
+    <item name="departureLabel" type="id" />
+    <item name="departureDate" type="id" />
+    <item name="travellerLabel" type="id" />
+    <item name="travellerDetails" type="id" />
+    <item name="searchButton" type="id" />
+</resources>
