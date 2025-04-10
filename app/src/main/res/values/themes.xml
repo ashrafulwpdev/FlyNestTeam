@@ -13,7 +13,6 @@
 
         <!-- Bottom navigation colors -->
         <item name="bottomNavigationStyle">@style/BottomNavigationStyle</item>
-<<<<<<< HEAD
 
         <!-- Status bar color -->
         <item name="android:statusBarColor">@color/white</item>
